@@ -4,11 +4,34 @@ kubectl run --rm --generator=run-pod/v1 curl --image=radial/busyboxplus:curl -i 
 # Use curl if created
 kubectl exec -it curl sh
 
+# Health check
+curl -i -X GET 'http://poi.api-dev.svc.cluster.local:80/api/poi/healthcheck'
+
 # Use log
 kubectl logs <name>
 
 # Change kubectl context
 az aks get-credentials --resource-group teamResources --name team1-cluster2 --admin
+# pass --overwrite-existing to overwrite existing context
 
 # Get resource ID of cluster
 az aks show --name team1-cluster2 --resource-group teamResources --query id -o tsv
+
+# Get namespaces
+kubectl get namespaces
+
+# Get roles
+kubectl get roles --namespace web-dev
+kubectl get roles --all-namespaces
+
+# Get role bindings
+kubectl get rolebinding --all-namespaces
+
+# Do I have rights to do things 😂
+kubectl auth can-i create deployments --namespace web-dev
+
+# Get secrets for a namespace
+kubectl get secrets -n api-dev
+
+# Get NGINX ingress controller
+kubectl --namespace ingress-basic get services -o wide -w nginx-ingress-ingress-nginx-controller

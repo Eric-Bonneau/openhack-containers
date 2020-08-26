@@ -1,0 +1,15 @@
+# Run this in the Azure cloud
+
+SP=`az ad sp create-for-rbac --skip-assignment`
+
+APPID=`echo $SP | jq .appId`
+APPID=`echo "${APPID//\"}"`
+
+SECRET=`echo $SP | jq .password`
+SECRET=`echo "${SECRET//\"}"`
+
+az keyvault set-policy -n aks-secrets-team1 \
+    --spn $APPID --secret-permissions get list
+
+# APP ID: 7e936586-6e5c-4686-b1ef-40b5af75ac39
+# Password: i7k.K2xYJ7~cH-S~owM5JO5dVSg91vLZu6

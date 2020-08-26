@@ -1,0 +1,4 @@
+az aks get-credentials --resource-group teamResources --name team1-cluster2 --admin
+
+kubectl create namespace web-dev
+kubectl create namespace api-dev

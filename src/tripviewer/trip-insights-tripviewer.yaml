@@ -2,13 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: trip-insights-tripviewer
+  namespace: web-dev
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: trip-insights-tripviewer
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/"
+        prometheus.io/port: "80"
+        prometheus.io/scheme: "http"
       labels:
         app: trip-insights-tripviewer
     spec:
@@ -19,9 +25,9 @@ spec:
         image: registrykty1185.azurecr.io/tripinsights/tripviewer:1.0
         env:
           - name: USERPROFILE_API_ENDPOINT
-            value: http://trip-insights-userprofile.default.svc.cluster.local
+            value: http://trip-insights-userprofile.api-dev.svc.cluster.local
           - name: TRIPS_API_ENDPOINT
-            value: http://trip-insights-trips.default.svc.cluster.local
+            value: http://trip-insights-trips.api-dev.svc.cluster.local
         resources:
           requests:
             cpu: 100m
@@ -37,8 +43,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: trip-insights-tripviewer
+  namespace: web-dev
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - port: 80
     name: service-http

@@ -1,0 +1,24 @@
+# Seems to not work in Git Bash! :(
+
+AKS_ID=$(az aks show \
+  --resource-group teamResources \
+  --name team1-cluster2 \
+  --query id -o tsv)
+
+# API developers
+az role assignment create \
+  --assignee dc90a38f-fcc7-43b1-a8f2-4d7b6bd020d2 \
+  --role "Azure Kubernetes Service Cluster User Role" \
+  --scope $AKS_ID
+
+# Web developers
+az role assignment create \
+  --assignee 963d27bc-88c1-4bb4-98ba-1a2d42d94511 \
+  --role "Azure Kubernetes Service Cluster User Role" \
+  --scope $AKS_ID
+
+# Admins
+az role assignment create \
+  --assignee e95e11a2-52d0-45d1-be71-6c1ea0c11795 \
+  --role "Azure Kubernetes Service Cluster Admin Role" \
+  --scope $AKS_ID

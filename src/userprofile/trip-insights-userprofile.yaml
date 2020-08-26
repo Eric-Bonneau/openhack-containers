@@ -2,8 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: trip-insights-userprofile
+  namespace: api-dev
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: trip-insights-userprofile
@@ -14,20 +15,45 @@ spec:
     spec:
       nodeSelector:
         "beta.kubernetes.io/os": linux
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "aks-secrets-team1"
+            nodePublishSecretRef:
+              name: secrets-store-creds
       containers:
       - name: trip-insights-userprofile
         image: registrykty1185.azurecr.io/tripinsights/userprofile:1.0
         env:
           - name: SQL_DBNAME
-            value: mydrivingDB
+            valueFrom:
+                secretKeyRef:
+                  name: sql-dbname
+                  key: sql-dbname
           - name: SQL_USER
-            value: sqladminkTy1185
+            valueFrom:
+                secretKeyRef:
+                  name: sql-user
+                  key: sql-user
           - name: SQL_PASSWORD
-            value: Password123
+            valueFrom:
+                secretKeyRef:
+                  name: sql-password
+                  key: sql-password
           - name: SQL_SERVER
-            value: sqlserverkty1185.database.windows.net
+            valueFrom:
+                secretKeyRef:
+                  name: sql-server
+                  key: sql-server
           - name: ASPNETCORE_ENVIRONMENT
             value: Production
+        volumeMounts:
+          - name: secrets-store-inline
+            mountPath: "/mnt/secrets-store"
+            readOnly: true
         resources:
           requests:
             cpu: 100m
@@ -43,6 +69,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: trip-insights-userprofile
+  namespace: api-dev
 spec:
   type: ClusterIP
   ports:

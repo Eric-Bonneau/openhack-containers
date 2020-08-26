@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-controller-api-dev
+  namespace: api-dev
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /api/poi
+        backend:
+          serviceName: trip-insights-poi
+          servicePort: 80
+      - path: /api/trips
+        backend:
+          serviceName: trip-insights-trips
+          servicePort: 80
+      - path: /api/user
+        backend:
+          serviceName: trip-insights-userprofile
+          servicePort: 80
+      - path: /api/user-java
+        backend:
+          serviceName: trip-insights-user-java
+          servicePort: 80
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-controller-web-dev
+  namespace: web-dev
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: trip-insights-tripviewer
+          servicePort: 80

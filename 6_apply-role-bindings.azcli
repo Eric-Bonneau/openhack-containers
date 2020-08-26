@@ -1,0 +1,2 @@
+kubectl apply -f api-dev-role-binding.yaml
+kubectl apply -f web-dev-role-binding.yaml

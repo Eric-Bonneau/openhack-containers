@@ -1,0 +1,1 @@
+az keyvault create -n aks-secrets-team1 -g teamResources
