@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trip-insights-userprofile
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: trip-insights-userprofile
+  template:
+    metadata:
+      labels:
+        app: trip-insights-userprofile
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: trip-insights-userprofile
+        image: registrykty1185.azurecr.io/tripinsights/userprofile:1.0
+        env:
+          - name: SQL_DBNAME
+            value: mydrivingDB
+          - name: SQL_USER
+            value: sqladminkTy1185
+          - name: SQL_PASSWORD
+            value: Password123
+          - name: SQL_SERVER
+            value: sqlserverkty1185.database.windows.net
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Production
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trip-insights-userprofile
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    name: service-http
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: trip-insights-userprofile
