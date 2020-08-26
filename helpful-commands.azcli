@@ -1,0 +1,14 @@
+# Create curl pod
+kubectl run --rm --generator=run-pod/v1 curl --image=radial/busyboxplus:curl -i --tty
+
+# Use curl if created
+kubectl exec -it curl sh
+
+# Use log
+kubectl logs <name>
+
+# Change kubectl context
+az aks get-credentials --resource-group teamResources --name team1-cluster2 --admin
+
+# Get resource ID of cluster
+az aks show --name team1-cluster2 --resource-group teamResources --query id -o tsv

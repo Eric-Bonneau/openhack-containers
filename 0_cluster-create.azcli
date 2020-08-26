@@ -1,15 +1,18 @@
 # Requires Azure CLI >= v2.9 (I think)
 
+# Prerequisites
+## https://docs.microsoft.com/en-us/azure/aks/managed-aad
+
 # Create the cluster (AKS with AAD and VNet)
 az aks create \
     -g teamResources \
     -n team1-cluster2 \
     --enable-aad \
-    --aad-admin-group-object-ids d6bc44d4-5a9c-4b82-b85a-faf357633b7c \
-    --aad-tenant-id c1c0186e-d60a-4109-8c58-bed0d2f6eeaa \
+    --aad-admin-group-object-ids d6bc44d4-5a9c-4b82-b85a-faf357633b7c \ # This is taken from the AAD group overview (Azure Portal)
+    --aad-tenant-id c1c0186e-d60a-4109-8c58-bed0d2f6eeaa \ # This is taken from the AAD Overview (Azure Portal)
     --network-plugin azure \
-    --vnet-subnet-id /subscriptions/d0646937-39d1-4339-a40c-b59b884e33dd/resourceGroups/teamResources/providers/Microsoft.Network/virtualNetworks/vnet/subnets/vm-subnet \
+    --vnet-subnet-id /subscriptions/d0646937-39d1-4339-a40c-b59b884e33dd/resourceGroups/teamResources/providers/Microsoft.Network/virtualNetworks/vnet/subnets/vm-subnet \ # This is taken from the VNet properties (Azure Portal)
     --docker-bridge-address 172.17.0.1/16 \
-    --dns-service-ip 10.2.0.10 \
-    --service-cidr 10.2.0.0/24 \
+    --dns-service-ip 10.3.0.10 \
+    --service-cidr 10.3.0.0/24 \
     --generate-ssh-keys
