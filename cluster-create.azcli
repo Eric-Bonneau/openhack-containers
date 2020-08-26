@@ -1,0 +1,24 @@
+# Requires Azure CLI >= v2.9 (I think)
+
+# Create the cluster (AKS with AAD and VNet)
+az aks create \
+    -g teamResources \
+    -n team1-cluster2 \
+    --enable-aad \
+    --aad-admin-group-object-ids d6bc44d4-5a9c-4b82-b85a-faf357633b7c \
+    --aad-tenant-id c1c0186e-d60a-4109-8c58-bed0d2f6eeaa \
+    --network-plugin azure \
+    --vnet-subnet-id /subscriptions/d0646937-39d1-4339-a40c-b59b884e33dd/resourceGroups/teamResources/providers/Microsoft.Network/virtualNetworks/vnet/subnets/vm-subnet \
+    --docker-bridge-address 172.17.0.1/16 \
+    --dns-service-ip 10.2.0.10 \
+    --service-cidr 10.2.0.0/24 \
+    --generate-ssh-keys
+
+# Associate cluster with ACR (Azure Container Registry)
+az aks update \
+    -n team1-cluster2 \
+    -g teamResources \
+    --attach-acr registrykty1185
+
+# TODO:
+# * Add AKS apply for our pods
