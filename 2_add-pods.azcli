@@ -1,2 +1,5 @@
-# TODO:
-# * Add AKS apply for our pods
+kubectl apply -f ./src/poi/trip-insights-poi.yaml 
+kubectl apply -f ./src/trips/trip-insights-trips.yaml 
+kubectl apply -f ./src/tripviewer/trip-insights-tripviewer.yaml 
+kubectl apply -f ./src/user-java/trip-insights-user-java.yaml 
+kubectl apply -f ./src/userprofile/trip-insights-userprofile.yaml 
