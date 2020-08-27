@@ -1,0 +1,2 @@
+# Genetec VPN public IP
+az aks update --resource-group teamResources --name team1-cluster2 --api-server-authorized-ip-ranges 68.67.62.2/32
