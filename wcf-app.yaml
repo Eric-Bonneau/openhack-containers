@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wcf-service
+  namespace: wcf-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: wcf-service
+      labels:
+        app: wcf-service
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": windows
+      containers:
+      - name: wcf-service
+        image: registrykty1185.azurecr.io/wcfservice:1.0
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 800M
+          requests:
+            cpu: 100m
+            memory: 300M
+        ports:
+          - containerPort: 80
+  selector:
+    matchLabels:
+      app: wcf-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wcf-service
+  namespace: wcf-app
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+  selector:
+    app: wcf-service

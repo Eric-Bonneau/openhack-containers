@@ -35,3 +35,10 @@ kubectl get secrets -n api-dev
 
 # Get NGINX ingress controller
 kubectl --namespace ingress-basic get services -o wide -w nginx-ingress-ingress-nginx-controller
+
+# Legit dashboard 👌
+kubectl port-forward service/linkerd-web -n linkerd 8084:8084
+
+kubectl get -n api-dev deploy -o yaml \
+  | linkerd inject - \
+  | kubectl apply -f -

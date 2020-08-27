@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trip-insights-tripviewer2
+  namespace: web-dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: trip-insights-tripviewer2
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/"
+        prometheus.io/port: "80"
+        prometheus.io/scheme: "http"
+      labels:
+        app: trip-insights-tripviewer2
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: trip-insights-tripviewer2
+        image: registrykty1185.azurecr.io/tripviewer2:1.0
+        env:
+          - name: USERPROFILE_API_ENDPOINT
+            value: http://trip-insights-userprofile.api-dev.svc.cluster.local
+          - name: TRIPS_API_ENDPOINT
+            value: http://trip-insights-trips.api-dev.svc.cluster.local
+          - name: WCF_ENDPOINT
+            value: http://wcf-service.wcf-app.svc.cluster.local
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+          name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trip-insights-tripviewer2
+  namespace: web-dev
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    name: service-http
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: trip-insights-tripviewer2
